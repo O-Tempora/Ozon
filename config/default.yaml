@@ -1,0 +1,6 @@
+HOST: localhost
+PORT: 6969
+DB_PORT: 6970
+DB_NAME: ozon
+DB_USER: postgres
+DB_PASS: postgres

@@ -1,0 +1,17 @@
+syntax = "proto3"; 
+package shortener.v1;
+
+option go_package = "github.com/O-Tempora/Ozon/internal/shortener_v1;shortener_v1";
+
+service ShortenerService {
+    rpc GetShortenedURL(LongURL) returns (ShortenedURL);
+    rpc GetURL(ShortenedURL) returns (LongURL);
+}
+
+message LongURL {
+    string longURL = 1;
+}
+
+message ShortenedURL {
+    string shortURL = 1;
+}
