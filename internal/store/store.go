@@ -16,16 +16,16 @@ type Store interface {
 	GetOriginalURL(shortURL string) (string, error)
 }
 
-func CreateSqlStore(port int, user, password, base string) (*sqlstore.SqlStore, error) {
+func CreateSqlStore(port int, host, user, password, base string) (*sqlstore.SqlStore, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	connStr := fmt.Sprintf("posgres://%s:%s@localhost:%d/%s?sslmode=disable", user, password, port, base)
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", user, password, host, port, base)
 	db, err := pgx.Connect(ctx, connStr)
 	if err != nil {
 		return nil, fmt.Errorf("Database connection failed: %w", err)
 	}
-	if err := db.Ping(ctx); db != nil {
+	if err := db.Ping(ctx); err != nil {
 		return nil, fmt.Errorf("Database ping failed: %w", err)
 	}
 

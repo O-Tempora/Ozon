@@ -3,11 +3,12 @@ BINARY_NAME=app
 .PHONY:
 	build \
 	dbrun \
+	dbstop \
 	memorun \
 	test \
 	gen 
 
-gen:
+gen: 
 	mkdir -p internal
 	protoc --go_out=internal --go_opt=paths=source_relative \
 		--go-grpc_out=internal --go-grpc_opt=paths=source_relative \
@@ -16,8 +17,11 @@ gen:
 build:
 	go build -o $(BINARY_NAME) cmd/api_server/main.go
 
-dbrun: build
-	./app -config=$(config) -db=true
+dbrun: 
+	sudo docker compose up -d
+
+dbstop: 
+	sudo docker compose down
 
 memorun: build
 	./app -config=$(config) -db=false

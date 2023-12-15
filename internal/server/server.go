@@ -37,7 +37,7 @@ func initLogger(src io.Writer) zerolog.Logger {
 
 func initStore(useDb bool, cf *config.Config) (store.Store, error) {
 	if useDb {
-		store, err := store.CreateSqlStore(cf.DbPort, cf.DbUser, cf.DbPass, cf.DbName)
+		store, err := store.CreateSqlStore(cf.DbPort, cf.DbHost, cf.DbUser, cf.DbPass, cf.DbName)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to initialize database: %w", err)
 		}
