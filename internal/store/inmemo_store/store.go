@@ -12,9 +12,9 @@ type InmemStore struct {
 
 // pairs - хранит ключ-shortURL : значение-url
 // urls - хранит ключ-уже записанные URL : значение-struct{}{}
-// Сделано для производительности, чтобы каждый раз
+// Сделано для производительности, чтобы каждый раз при вставке нового URL
 // не итерировать по мапе pairs и не искать, существует ли
-// запись с таким значением
+// запись с таким значением URL
 func CreateInmemoStore() *InmemStore {
 	return &InmemStore{
 		pairs: &sync.Map{},
@@ -44,4 +44,9 @@ func (st *InmemStore) GetOriginalURL(ctx context.Context, shortURL string) (stri
 		return "", errInvalidURL
 	}
 	return urlVal, nil
+}
+
+func (st *InmemStore) ClearStore() {
+	st.pairs = &sync.Map{}
+	st.urls = &sync.Map{}
 }

@@ -3,24 +3,15 @@ package server
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"time"
 
 	"github.com/O-Tempora/Ozon/internal/api/shortener_v1"
 )
 
 func (s *Server) GetShortenedURL(ctx context.Context, longURL *shortener_v1.LongURL) (*shortener_v1.ShortenedURL, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(1*time.Second))
 	defer cancel()
-
-	_, err := url.ParseRequestURI(longURL.LongURL)
-	if err != nil {
-		err = fmt.Errorf("Invalid URL: %w", err)
-		s.Logger.Error().Msg(err.Error())
-		return nil, err
-	}
-
-	shortURL, err := shortenURL()
+	shortURL, err := shortenURL(longURL.LongURL)
 	if err != nil {
 		err = fmt.Errorf("Failed to shorten URL: %w", err)
 		s.Logger.Error().Msg(err.Error())
@@ -36,7 +27,7 @@ func (s *Server) GetShortenedURL(ctx context.Context, longURL *shortener_v1.Long
 }
 
 func (s *Server) GetURL(ctx context.Context, shortURL *shortener_v1.ShortenedURL) (*shortener_v1.LongURL, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(1*time.Second))
 	defer cancel()
 
 	longURL, err := s.Store.GetOriginalURL(ctx, shortURL.ShortURL)

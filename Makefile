@@ -37,3 +37,6 @@ memostop:
 
 run: build
 	./$(BINARY_NAME) -db=false
+
+test:
+	go test -count=1 ./...

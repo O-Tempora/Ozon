@@ -3,6 +3,8 @@ package server
 import (
 	"crypto/rand"
 	"encoding/binary"
+	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -39,7 +41,11 @@ func randomizeUint64() (uint64, error) {
 	return binary.LittleEndian.Uint64(b[:]), nil
 }
 
-func shortenURL() (string, error) {
+func shortenURL(longURL string) (string, error) {
+	_, err := url.ParseRequestURI(longURL)
+	if err != nil {
+		return "", fmt.Errorf("Failed to validate URL: %w", err)
+	}
 	u, err := randomizeUint64()
 	if err != nil {
 		return "", err
