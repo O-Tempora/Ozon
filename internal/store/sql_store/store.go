@@ -6,8 +6,8 @@ type SqlStore struct {
 	Db *pgx.Conn
 }
 
-func (st *SqlStore) ShortenURL(url string) (string, error) {
-	return "", nil
+func (st *SqlStore) SaveShortenedURL(url string) error {
+	return nil
 }
 
 func (st *SqlStore) GetOriginalURL(shortURL string) (string, error) {

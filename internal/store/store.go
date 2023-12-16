@@ -12,7 +12,7 @@ import (
 )
 
 type Store interface {
-	ShortenURL(url string) (string, error)
+	SaveShortenedURL(url string) error
 	GetOriginalURL(shortURL string) (string, error)
 }
 
@@ -31,8 +31,8 @@ func CreateSqlStore(port int, host, user, password, base string) (*sqlstore.SqlS
 
 	if _, err := db.Exec(ctx, `create table urls(
 		id serial4 primary key,
-		url text not null,
-		short_url varchar(10) not null check (length(short_url) = 10)
+		url text not null unique,
+		short_url varchar(10) not null unique check (length(short_url) = 10)
 	)`); err != nil {
 		return nil, fmt.Errorf("Table creation failed: %w", err)
 	}

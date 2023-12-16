@@ -7,4 +7,6 @@ WORKDIR /app
 COPY --from=builder /app/app ./
 COPY --from=builder /app/.env ./
 COPY --from=builder /app/config /app/config
+COPY --from=builder /app/api /app/api
+EXPOSE 6969
 CMD [ "./app" ]

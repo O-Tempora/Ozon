@@ -41,7 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Host, config.Port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.Port))
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -49,7 +49,7 @@ func main() {
 	reflection.Register(s)
 	shortener_v1.RegisterShortenerServiceServer(s, server)
 
-	server.Logger.Info().Msgf("TCP server started on %s:%d", config.Host, config.Port)
+	server.Logger.Info().Msgf("TCP server started on :%d", config.Port)
 	if err = s.Serve(lis); err != nil {
 		server.Logger.Fatal().Msgf("Server start error: %s", err.Error())
 	}

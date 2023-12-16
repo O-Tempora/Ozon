@@ -56,5 +56,6 @@ func CreateServer(useDb bool, cf *config.Config) (*Server, error) {
 		return nil, fmt.Errorf("Failed to create server: %w", err)
 	}
 	s.Store = store
+
 	return s, nil
 }
