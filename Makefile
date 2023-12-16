@@ -1,10 +1,15 @@
 BINARY_NAME=app
+IMAGE_NAME=api
+HOST=127.0.0.1
+PORT=6969
+APP_PORT=6969
 
 .PHONY:
 	build \
 	dbrun \
 	dbstop \
 	memorun \
+	memostop \
 	test \
 	gen 
 
@@ -23,5 +28,9 @@ dbrun:
 dbstop: 
 	sudo docker compose down
 
-memorun: build
-	./app -config=$(config) -db=false
+memorun:
+	sudo docker build -t $(IMAGE_NAME) .
+	sudo docker run -d -p $(HOST):$(PORT):$(APP_PORT) --name $(IMAGE_NAME) -it $(IMAGE_NAME) ./$(BINARY_NAME) -config=config/docker.yaml -db=false
+
+memostop:
+	sudo docker stop $(IMAGE_NAME) && sudo docker rm $(IMAGE_NAME)

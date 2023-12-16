@@ -32,7 +32,7 @@ func CreateSqlStore(port int, host, user, password, base string) (*sqlstore.SqlS
 	if _, err := db.Exec(ctx, `create table urls(
 		id serial4 primary key,
 		url text not null,
-		short_url varchar(10) not null
+		short_url varchar(10) not null check (length(short_url) = 10)
 	)`); err != nil {
 		return nil, fmt.Errorf("Table creation failed: %w", err)
 	}
