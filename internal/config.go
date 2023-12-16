@@ -1,4 +1,4 @@
-package config
+package internal
 
 type Config struct {
 	Host   string `yaml:"HOST"`

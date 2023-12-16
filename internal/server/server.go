@@ -7,9 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/O-Tempora/Ozon/config"
+	"github.com/O-Tempora/Ozon/internal"
 	"github.com/O-Tempora/Ozon/internal/api/shortener_v1"
 	"github.com/O-Tempora/Ozon/internal/store"
+	inmemostore "github.com/O-Tempora/Ozon/internal/store/inmemo_store"
+	sqlstore "github.com/O-Tempora/Ozon/internal/store/sql_store"
 	"github.com/rs/zerolog"
 )
 
@@ -31,23 +33,23 @@ func initLogger(src io.Writer) zerolog.Logger {
 			t, _ := time.Parse(time.RFC3339, fmt.Sprintf("%s", i))
 			return t.Format(time.RFC1123)
 		},
-	}).With().Timestamp().Logger().Level(zerolog.InfoLevel)
+	}).With().Timestamp().Logger().Level(zerolog.DebugLevel)
 	return logger
 }
 
-func initStore(useDb bool, cf *config.Config) (store.Store, error) {
+func initStore(useDb bool, cf *internal.Config) (store.Store, error) {
 	if useDb {
-		store, err := store.CreateSqlStore(cf.DbPort, cf.DbHost, cf.DbUser, cf.DbPass, cf.DbName)
+		store, err := sqlstore.CreateSqlStore(cf.DbPort, cf.DbHost, cf.DbUser, cf.DbPass, cf.DbName)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to initialize database: %w", err)
 		}
 		return store, nil
 	}
-	store := store.CreateInmemoStore()
+	store := inmemostore.CreateInmemoStore()
 	return store, nil
 }
 
-func CreateServer(useDb bool, cf *config.Config) (*Server, error) {
+func CreateServer(useDb bool, cf *internal.Config) (*Server, error) {
 	s := &Server{
 		Logger: initLogger(os.Stdout),
 	}

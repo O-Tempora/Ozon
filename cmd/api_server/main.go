@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/O-Tempora/Ozon/config"
+	"github.com/O-Tempora/Ozon/internal"
 	"github.com/O-Tempora/Ozon/internal/api/shortener_v1"
 	"github.com/O-Tempora/Ozon/internal/server"
 	"google.golang.org/grpc"
@@ -55,8 +55,8 @@ func main() {
 	}
 }
 
-func parseConfig(configPath string) (*config.Config, error) {
-	config := &config.Config{}
+func parseConfig(configPath string) (*internal.Config, error) {
+	config := &internal.Config{}
 	if configPath == "" {
 		configPath = defaultConfigPath
 	}
