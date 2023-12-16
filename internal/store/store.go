@@ -12,8 +12,8 @@ import (
 )
 
 type Store interface {
-	SaveShortenedURL(url string) error
-	GetOriginalURL(shortURL string) (string, error)
+	SaveShortenedURL(ctx context.Context, url, shortURL string) error
+	GetOriginalURL(ctx context.Context, shortURL string) (string, error)
 }
 
 func CreateSqlStore(port int, host, user, password, base string) (*sqlstore.SqlStore, error) {
@@ -41,6 +41,6 @@ func CreateSqlStore(port int, host, user, password, base string) (*sqlstore.SqlS
 
 func CreateInmemoStore() *inmemostore.InmemStore {
 	return &inmemostore.InmemStore{
-		Store: &sync.Map{},
+		Map: &sync.Map{},
 	}
 }

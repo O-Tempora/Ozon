@@ -10,7 +10,7 @@ import (
 )
 
 func (s *Server) GetShortenedURL(ctx context.Context, longURL *shortener_v1.LongURL) (*shortener_v1.ShortenedURL, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(1*time.Second))
 	defer cancel()
 
 	_, err := url.ParseRequestURI(longURL.LongURL)
@@ -22,17 +22,17 @@ func (s *Server) GetShortenedURL(ctx context.Context, longURL *shortener_v1.Long
 	if err != nil {
 		return nil, fmt.Errorf("Failed to shorten URL: %w", err)
 	}
-	if err = s.Store.SaveShortenedURL(shortURL); err != nil {
+	if err = s.Store.SaveShortenedURL(ctx, longURL.LongURL, shortURL); err != nil {
 		return nil, fmt.Errorf("Failed to save URL: %w", err)
 	}
 	return &shortener_v1.ShortenedURL{ShortURL: shortURL}, nil
 }
 
 func (s *Server) GetURL(ctx context.Context, shortURL *shortener_v1.ShortenedURL) (*shortener_v1.LongURL, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(500*time.Millisecond))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(1*time.Second))
 	defer cancel()
 
-	longURL, err := s.Store.GetOriginalURL(shortURL.ShortURL)
+	longURL, err := s.Store.GetOriginalURL(ctx, shortURL.ShortURL)
 	if err != nil {
 		err = fmt.Errorf("Failed to get original URL: %w", err)
 		s.Logger.Error().Msg(err.Error())
